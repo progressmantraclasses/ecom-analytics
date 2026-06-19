@@ -28,7 +28,7 @@ RUN mkdir -p logs && chown -R backend:nodejs logs
 
 USER backend
 
-EXPOSE 3001
+EXPOSE 5000
 
 ENV NODE_ENV=production
 

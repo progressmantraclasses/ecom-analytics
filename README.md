@@ -1,218 +1,144 @@
-# CF Analytics — User Analytics Application
+# Nexus Analytics — User Behavior Tracking & Analytics Platform
 
-> A production-grade, full-stack user analytics platform built for the CausalFunnel hiring assignment. Features a vanilla JS tracking script, a high-performance Node.js/TypeScript backend, and a beautiful Vite + React dashboard.
+A production-grade, full-stack user behavior analytics platform featuring a vanilla tracking script, a high-performance Node.js/TypeScript backend, and a beautiful Vite + React analytics dashboard. 
 
-![Tech Stack](https://img.shields.io/badge/Node.js-20-green?logo=node.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue?logo=typescript)
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
-![MongoDB](https://img.shields.io/badge/MongoDB-7-green?logo=mongodb)
-![Redis](https://img.shields.io/badge/Redis-7-red?logo=redis)
-![Docker](https://img.shields.io/badge/Docker-Compose-blue?logo=docker)
+The demonstration ecosystem is powered by a premium e-commerce storefront (**NexusStore**) that naturally triggers standard (page view, click) and semantic (cart addition, checkout, purchase, newsletter subscription) tracking events.
 
 ---
 
-## Overview
+## System Architecture
 
-CF Analytics is a complete user behavior tracking system consisting of:
+The platform is organized into three major components:
 
-1. **Tracker Script** (`tracker/`) — Vanilla JS UMD bundle embeddable on any webpage
-2. **Backend API** (`backend/`) — Express + TypeScript + MongoDB + Redis
-3. **Dashboard** (`frontend/`) — Vite + React with dark glassmorphism design
-4. **Demo Page** (`tracker/demo.html`) — Interactive live event viewer
-
----
-
-## Tech Stack
-
-### Backend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Node.js | 20+ | Runtime |
-| TypeScript | 5.3 | Type safety |
-| Express.js | 4.18 | HTTP framework |
-| MongoDB + Mongoose | 7 / 8 | Primary database |
-| Redis (ioredis) | 7 | Caching layer |
-| Zod | 3.22 | Request validation |
-| Winston | 3.11 | Structured logging |
-| Helmet + CORS | latest | Security headers |
-| express-rate-limit | 7 | Rate limiting |
-
-### Frontend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Vite | 5 | Build tool |
-| React | 18 | UI framework |
-| React Router | 6 | Client-side routing |
-| TanStack Query | 5 | Data fetching + caching |
-| Recharts | 2.10 | Charts |
-| Axios | 1.6 | HTTP client |
-| date-fns | 3 | Date formatting |
-| lucide-react | 0.303 | Icons |
-
-### Tracking Script
-- Vanilla TypeScript → ES5 UMD bundle
-- No external dependencies
-- < 8KB minified
-
----
-
-## Project Structure
+1. **Tracker Script & Storefront** (`tracker/`) — Vanilla JS UMD tracking script embedded on a high-fidelity, dark-themed e-commerce storefront showing tech products. Includes an overlay event log console for real-time tracking visualization.
+2. **Backend API** (`backend/`) — High-performance Express + TypeScript API utilizing MongoDB for persistence, Redis for caching, and Zod for schema validation. **Runs on port `5000`**.
+3. **Analytics Dashboard** (`frontend/`) — Vite + React SPA designed with a dark glassmorphism system. Consumes the backend API to visualize stats, session metrics, user journeys, and heatmaps.
 
 ```
 shivam-tiwari-assignment/
-├── backend/
+├── backend/                  # Node.js + TypeScript REST API (Port 5000)
 │   ├── src/
-│   │   ├── config/          # env, DB, Redis connections
-│   │   ├── models/          # Mongoose schemas (Event, Session)
-│   │   ├── routes/          # Express routers
-│   │   ├── controllers/     # Request handlers
-│   │   ├── middleware/       # error handler, rate limiter, logger
-│   │   ├── services/        # business logic + cache
-│   │   ├── utils/           # constants, validators, logger
-│   │   ├── types/           # TypeScript interfaces
-│   │   ├── app.ts           # Express app setup
-│   │   └── server.ts        # Entry point
-│   ├── .env.example
-│   ├── tsconfig.json
-│   ├── package.json
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── layout/      # Sidebar, TopBar, MobileNav
-│   │   │   ├── dashboard/   # StatsCard, EventsChart
-│   │   │   ├── sessions/    # SessionsTable, EventTimeline
-│   │   │   ├── heatmap/     # HeatmapCanvas
-│   │   │   └── shared/      # SkeletonLoader, EmptyState, Pagination, Toast
-│   │   ├── pages/           # Dashboard, Sessions, SessionDetail, Heatmap
-│   │   ├── hooks/           # useStats, useSessions, useHeatmap
-│   │   ├── lib/             # api.js, utils.js
-│   │   ├── App.jsx
-│   │   └── index.css        # Full design system
-│   ├── .env.example
-│   ├── vite.config.js
-│   ├── package.json
-│   └── Dockerfile
-│
-├── tracker/
-│   ├── dist/
-│   │   └── tracker.js       # Compiled UMD bundle (drop-in ready)
-│   ├── demo.html            # Interactive demo page
+│   │   ├── config/           # Database, Redis, and Port Configuration
+│   │   ├── controllers/      # Route controllers (events, sessions, heatmaps, stats)
+│   │   ├── middleware/       # Rate limiting, logging, error validation
+│   │   ├── models/           # Mongoose schemas (Event, Session)
+│   │   ├── services/         # Caching logic and DB transactions
+│   │   └── server.ts         # Application entry point
+│   ├── Dockerfile
 │   └── package.json
 │
-├── docker-compose.yml
-├── .gitignore
-└── README.md
+├── frontend/                 # Vite + React Analytics Dashboard (Port 5173 / Port 3000)
+│   ├── public/               # Static assets & Brand Favicons
+│   ├── src/
+│   │   ├── components/       # UI elements (Heatmaps, Timelines, Charts, Tables)
+│   │   ├── pages/            # Dashboard Overview, Sessions List, Session Detail, Heatmap
+│   │   ├── hooks/            # TanStack Query custom data hooks
+│   │   ├── lib/              # Axios API client and utility helpers
+│   │   └── App.jsx
+│   ├── Dockerfile
+│   └── package.json
+│
+└── tracker/                  # NexusStore Storefront & Tracking Script
+    ├── public/
+    │   ├── tracker.js        # Compiled UMD analytics script
+    │   └── favicon.png       # E-commerce brand favicon
+    ├── src/                  # React storefront codebase
+    ├── index.html            # Embedded script page
+    └── package.json
 ```
 
 ---
 
-## Setup
+## Detailed Feature Implementation
 
-### Prerequisites
+### 1. NexusStore E-Commerce Storefront
+- **Visual Design**: Styled with a premium dark theme, neon borders, smooth scale transitions, and glassmorphism cards.
+- **Hero Showcase**: Highlighting premium tech gadgets (smartwatch, microphone, curved monitor).
+- **Product Grid**: Rendered with dynamic pricing, item description, and responsive grid layouts.
+- **Cart & Drawer System**:
+  - Live local state persistence using `localStorage`.
+  - Interactive Shopping Cart side modal to modify items.
+  - Interactive **Event Logs Console** that slides out as a drawer to display a live stream of JSON events captured by the tracker.
+- **Checkout & Pricing Flow**: Form validations for shipping details, mock credit card details, and a dynamic receipt summary that triggers order calculations.
 
-- **Node.js** >= 20 ([download](https://nodejs.org/))
-- **MongoDB** >= 7 (local) or [MongoDB Atlas](https://www.mongodb.com/atlas)
-- **Redis** >= 7 (local) or [Upstash Redis](https://upstash.com/)
+### 2. Event Tracking Capabilities
+The embedded `tracker.js` intercepts and records user activity:
+- **Standard Events**:
+  - `page_view`: Triggered automatically on page load or client-side navigation.
+  - `click`: Records absolute (x, y) coordinates relative to page document height along with the client's current viewport width/height.
+- **Semantic / E-Commerce Events**:
+  - `add_to_cart`: Triggered when clicking a product's "Add to Cart" button (includes product ID, name, price).
+  - `begin_checkout`: Dispatched when navigating to the checkout and pricing form.
+  - `purchase`: Triggered upon complete order submission, sending the cart total, number of items, and customer info.
+  - `newsletter_signup`: Dispatched on newsletter sign-ups.
+
+### 3. Analytics Dashboard Features
+- **Overview Panel**: Live widgets displaying Total Sessions, Total Events, Page Views, Clicks, and Today's snapshot stats. Contains an **Events Over Time** line chart utilizing Recharts.
+- **Recent Sessions Table**: Table listing latest active users, event counts, page views, click stats, and "Last Seen" relative timestamps.
+- **Sessions & User Journey**:
+  - Pagination, sorting ("Last Seen", "Event Count", etc.), and order controls (Newest first, Oldest first).
+  - Interactive **User Journey Timeline** detailing every event type, the URL, absolute time, and click coordinate/viewport mappings.
+- **Click Heatmap**:
+  - Interactive page URL selector.
+  - Filters by Date Range (From/To).
+  - Normalizes coordinate ratios mapping different screens sizes onto a standard responsive HTML5 Canvas.
+  - **Readability Dropdown Fix**: Solved the native dropdown options visibility bug by explicitly styling options to inherit dark surface colors.
 
 ---
+
+## Setup & Installation
 
 ### Option A: Docker Compose (Recommended)
+This runs the entire stack (MongoDB, Redis, Backend, Frontend) concurrently.
 
-The fastest way to run everything including MongoDB and Redis:
-
-```bash
-# Clone the repository
-git clone <repo-url>
-cd shivam-tiwari-assignment
-
-# Start all services
-docker-compose up -d
-
-# Services:
-# - MongoDB:  localhost:27017
-# - Redis:    localhost:6379
-# - Backend:  http://localhost:3001
-# - Frontend: http://localhost:3000
-```
+1. Ensure Docker is running.
+2. In the root directory, start all services:
+   ```bash
+   docker-compose up -d
+   ```
+3. Services access:
+   - **Backend API**: `http://localhost:5000`
+   - **Analytics Dashboard**: `http://localhost:3000`
+   - **NexusStore Storefront**: `http://localhost:5173` (Runs locally)
 
 ---
 
 ### Option B: Manual Setup
 
-#### 1. Clone and navigate
-
-```bash
-git clone <repo-url>
-cd shivam-tiwari-assignment
-```
-
-#### 2. Backend setup
+#### 1. Backend Server Setup
+Ensure MongoDB and Redis are running locally.
 
 ```bash
 cd backend
-
-# Install dependencies
 npm install
-
-# Copy environment file
 cp .env.example .env
-
-# Edit .env with your MongoDB and Redis URIs
-# Then start dev server
+# Edit .env with your MONGODB_URI and REDIS_URL configuration
 npm run dev
 ```
+*Backend listens on port **5000**.*
 
-Backend runs on **http://localhost:3001**
-
-#### 3. Frontend setup
-
+#### 2. Analytics Dashboard Setup
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Copy environment file
 cp .env.example .env
-
-# Start dev server
 npm run dev
 ```
+*Vite dev server starts on **http://localhost:5173**.*
 
-Dashboard runs on **http://localhost:5173**
-
-#### 4. Open the demo page
-
-Simply open `tracker/demo.html` in your browser. It sends events to `http://localhost:3001/api/events` by default.
-
----
-
-### Environment Variables
-
-#### Backend (`backend/.env`)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | `3001` | Server port |
-| `MONGODB_URI` | `mongodb://localhost:27017/analytics` | MongoDB connection string |
-| `REDIS_URL` | `redis://localhost:6379` | Redis connection string |
-| `CORS_ORIGIN` | `http://localhost:5173` | Allowed CORS origins (comma-separated) |
-| `NODE_ENV` | `development` | Environment mode |
-| `LOG_LEVEL` | `info` | Winston log level |
-
-#### Frontend (`frontend/.env`)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `VITE_API_URL` | `http://localhost:3001` | Backend API base URL |
+#### 3. Storefront Setup (Tracker)
+```bash
+cd tracker
+npm install
+npm run dev
+```
+*Storefront dev server starts on **http://localhost:5174** (or default fallback).*
 
 ---
 
 ## API Documentation
 
-### Base URL: `http://localhost:3001`
+### Base URL: `http://localhost:5000`
 
 | Method | Endpoint | Description | Rate Limit |
 |--------|----------|-------------|-----------|
@@ -225,185 +151,44 @@ Simply open `tracker/demo.html` in your browser. It sends events to `http://loca
 | `GET` | `/api/stats/chart` | Events by day (last 7 days) | 30/min |
 | `GET` | `/health` | Health check | none |
 
-### POST /api/events
-
-**Request body:**
-```json
-{
-  "events": [
-    {
-      "session_id": "550e8400-e29b-41d4-a716-446655440000",
-      "event_type": "click",
-      "page_url": "https://example.com/pricing",
-      "timestamp": "2024-01-15T10:30:00.000Z",
-      "x": 234,
-      "y": 567,
-      "viewport_width": 1440,
-      "viewport_height": 900
-    }
-  ]
-}
-```
-
-**Response:**
-```json
-{ "success": true, "inserted": 1 }
-```
-
-### GET /api/sessions
-
-**Query params:** `page`, `limit`, `sort` (last_seen|first_seen|event_count|clicks), `order` (asc|desc)
-
-**Response:**
-```json
-{
-  "success": true,
-  "sessions": [...],
-  "total": 1234,
-  "page": 1,
-  "totalPages": 62
-}
-```
-
-### GET /api/heatmap
-
-**Query params:** `page_url` (required), `from` (ISO 8601), `to` (ISO 8601)
-
-**Response:**
-```json
-{
-  "success": true,
-  "clicks": [{ "x": 234, "y": 567, "viewport_width": 1440, "viewport_height": 900, "timestamp": "..." }],
-  "page_url": "https://example.com",
-  "total": 892
-}
-```
-
-### GET /api/stats
-
-**Response:**
-```json
-{
-  "success": true,
-  "totalSessions": 1234,
-  "totalEvents": 45678,
-  "totalPageViews": 23400,
-  "totalClicks": 22278,
-  "eventsToday": 1200
-}
-```
-
-### Error Response Format
-
-All errors return:
-```json
-{
-  "success": false,
-  "error": "Human-readable error message",
-  "code": "ERROR_CODE"
-}
-```
-
 ---
 
-## Tracker Script Usage
-
-### Drop-in embed
-
-```html
-<script src="/dist/tracker.js" data-endpoint="https://your-backend.com/api/events"></script>
-```
-
-### Manual tracking
-
-```javascript
-// Custom event
-window.CausalTracker.track('page_view');
-window.CausalTracker.track('click', { x: 100, y: 200 });
-
-// Get current session ID
-const sessionId = window.CausalTracker.getSessionId();
-
-// Listen for batches sent (for debugging)
-window.CausalTracker.onEvent((events) => {
-  console.log('Batch sent:', events);
-});
-```
-
----
-
-## Architecture Decisions & Trade-offs
+## Architecture Decisions & Caching
 
 ### 1. Pre-aggregated Sessions Collection
+Instead of running heavy MongoDB aggregations over the entire `events` collection on every dashboard refresh, we maintain a `sessions` metadata collection updated incrementally using `bulkWrite` on every event batch ingest. This delivers O(1) reads for session metadata and stats.
 
-Instead of running MongoDB aggregation pipelines on the `events` collection on every dashboard request (which would be O(n) over all events), we maintain a `sessions` collection that is updated via `bulkWrite` upserts on every ingest. This gives O(1) reads for the sessions list and dashboard stats.
+### 2. Redis Caching Policy
+- Stats: 10s TTL
+- Sessions List: 30s TTL per page/sort key
+- Session events list: 60s TTL
+- Heatmap data: 30s TTL
 
-**Trade-off:** Slight write amplification on ingest; acceptable because reads are far more frequent.
+*On any new batch ingest, caching logic deletes keys matching `analytics:sessions:*` and `analytics:stats` to keep data current.*
 
-### 2. Redis Cache Strategy
-
-- Stats: 10s TTL (acceptable staleness for a dashboard)
-- Sessions list: 30s TTL per page/sort key
-- Session events: 60s TTL (individual sessions don't change often)
-- Heatmap: 30s TTL
-
-**Cache invalidation:** On each batch ingest, we pattern-delete all `analytics:sessions:*` and `analytics:stats` keys to prevent stale data.
-
-**Graceful fallback:** If Redis is unavailable, the backend silently falls back to direct MongoDB queries — no downtime.
-
-### 3. Batch Event Ingestion
-
-Events are queued client-side and flushed every 2 seconds or when the queue hits 10. Server-side `insertMany({ ordered: false })` allows partial success — malformed documents don't block valid ones.
-
-**Why not single events?** Reduces HTTP overhead by 10–50x for high-traffic pages. p99 < 50ms even with 500 events per batch.
-
-### 4. Heatmap Coordinate Normalization
-
-Raw click coordinates (x, y) are stored alongside `viewport_width` and `viewport_height`. When rendering, we normalize:
-
+### 3. Viewport Coordinate Normalization
+Click coordinates are recorded relative to the element document size along with the client's screen width and height. When rendering the heatmap canvas, coords are projected:
 ```
 canvas_x = (click.x / click.viewport_width) * canvas.width
 canvas_y = (click.y / click.viewport_height) * canvas.height
 ```
-
-This ensures clicks recorded on mobile (375px wide) and desktop (1440px wide) are correctly overlaid on a single canvas.
-
-### 5. Session Expiry Logic (Client-Side)
-
-Sessions expire after **30 minutes of inactivity**. The last-activity timestamp is stored in `localStorage` alongside the session UUID. On each event, the timer is reset. After 30 minutes of no events, the next event creates a new session UUID.
-
-This mirrors industry-standard analytics (e.g., Google Analytics 30-minute session window).
-
-### 6. MongoDB Indexes
-
-Compound indexes `[session_id, timestamp]` and `[page_url, event_type, timestamp]` cover the most frequent query patterns:
-- Fetching all events for a session (ordered by time)
-- Heatmap queries filtered by URL, type, and time range
-
-An optional TTL index on `created_at` (commented out in code) can enforce 90-day data retention at the database level.
+This overlays mobile, tablet, and desktop clicks correctly onto a single canvas.
 
 ---
 
-## Scalability: What Changes at 10M Events/Day?
+## Environment Variables Configuration
 
-| Component | Current | At 10M/day |
-|-----------|---------|------------|
-| Event ingestion | Direct MongoDB insert | Kafka/BullMQ message queue → consumer |
-| Analytics storage | MongoDB | ClickHouse (columnar, analytics-optimized) |
-| Cache | Single Redis | Redis Cluster |
-| Backend | Single process | PM2 cluster or Kubernetes HPA |
-| Tracker delivery | Served from app | CDN (CloudFront/Fastly) |
-| MongoDB | Single node | Atlas with replica set + read preferences |
-| Session aggregation | In-memory during request | Flink/Spark streaming aggregate |
+### Backend (`backend/.env`)
+```env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/analytics
+REDIS_URL=redis://localhost:6379
+CORS_ORIGIN=http://localhost:5173,http://localhost:5174
+NODE_ENV=development
+LOG_LEVEL=info
+```
 
----
-
-## Assumptions
-
-1. **Authentication is out of scope** — The dashboard is a single-user admin panel. In production, you'd add JWT auth or SSO.
-2. **Tracker events are trusted** — No bot detection or IP-based filtering is implemented. At scale, you'd add fingerprinting and rate limiting per session ID.
-3. **Data retention** — Events are stored indefinitely in development. The TTL index (90 days) is commented out but ready to enable.
-4. **Viewport normalization** — Assumed all page renders are full-page (no iframes). Click coordinates may be slightly off for pages with sticky headers in certain browsers.
-5. **UTC timestamps** — All timestamps are stored and displayed in UTC. Timezone conversion is the responsibility of the consuming application.
-6. **Redis as optional** — Redis is a performance optimization, not a hard dependency. The system degrades gracefully without it.
-7. **Single-origin tracker** — The demo page uses `localhost:3001` as the endpoint. In production, the endpoint would be configured via the `data-endpoint` attribute and served from a CDN.
+### Frontend (`frontend/.env`)
+```env
+VITE_API_URL=http://localhost:5000
+```

@@ -11,7 +11,7 @@ for (const envVar of requiredEnvVars) {
 }
 
 export const config = {
-  port: parseInt(process.env['PORT'] ?? '3001', 10),
+  port: parseInt(process.env['PORT'] ?? '5000', 10),
   mongodbUri: process.env['MONGODB_URI'] ?? 'mongodb://localhost:27017/analytics',
   redisUrl: process.env['REDIS_URL'] ?? 'redis://localhost:6379',
   upstashRedisRestUrl: process.env['UPSTASH_REDIS_REST_URL'] ?? null,
