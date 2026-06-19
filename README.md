@@ -23,6 +23,12 @@ To run the project locally, follow these sequential steps to ensure ports are bo
      git clone https://github.com/progressmantraclasses/ecom-analytics.git
    ```
 
+### Go inside the cloned repository
+   ```bash
+     cd ecom-analytics
+   ```
+   
+
 ### 1. Backend Server Setup
 The backend requires MongoDB and optionally Redis.
 
