@@ -18,6 +18,11 @@ The demonstration ecosystem is powered by a premium e-commerce storefront (**Nex
 
 To run the project locally, follow these sequential steps to ensure ports are bound correctly.
 
+### Clone the Repo
+   ```bash
+     git clone https://github.com/progressmantraclasses/ecom-analytics.git
+   ```
+
 ### 1. Backend Server Setup
 The backend requires MongoDB and optionally Redis.
 
