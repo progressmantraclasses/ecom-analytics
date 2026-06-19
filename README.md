@@ -3,7 +3,7 @@
 Created by [Shivam Tiwari](https://shivamtiwari.me)
 
 ### 🚀 Deployed Links
-* 🛒 **Tracker Storefront**: [https://ecom-analytics-wvzq.vercel.app/](https://ecom-analytics-wvzq.vercel.app/)
+* 🛒 **Tracker Web Page**: [https://ecom-analytics-wvzq.vercel.app/](https://ecom-analytics-wvzq.vercel.app/)
 * 📊 **Analytics Dashboard**: [https://ecom-analytics-three.vercel.app/](https://ecom-analytics-three.vercel.app/)
 
 ---
