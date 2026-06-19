@@ -30,7 +30,7 @@
       var src = scripts[i].getAttribute('data-endpoint');
       if (src) return src;
     }
-    return 'http://localhost:5000/api/events';
+    return 'https://apis.codespirit.in/api/events';
   })();
 
   // ============================================================
